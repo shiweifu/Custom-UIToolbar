@@ -69,17 +69,37 @@
     
     for (int i=0; i<[self.ToolbarItems count]; i++)
     {
-        UIButton *ToolbarBtn = [self.ToolbarItems objectAtIndex:i];
-        
-        [ToolbarBtn setFrame: CGRectMake((int)x_coord, (int)TOP_MARGIN, (int)ButtonSize.width, (int)ButtonSize.height)];
-        
-        UIImage *ToolbarBtnImg = ToolbarBtn.imageView.image;
-        if (ToolbarBtnImg.size.width > ButtonSize.width)
-        {
-            ToolbarBtnImg = [self imageWithImage:ToolbarBtnImg scaledToSize:CGSizeMake(ButtonSize.width, (ButtonSize.width*ToolbarBtnImg.size.height)/ToolbarBtnImg.size.width)];
-            [ToolbarBtn setImage:ToolbarBtnImg forState:UIControlStateNormal];
+//        UIButton *ToolbarBtn = [self.ToolbarItems objectAtIndex:i];
+            id item = [self.ToolbarItems objectAtIndex:i];
+            
+            if([item class] == [UIButton class])
+            {
+                NSLog(@"%@", @"uibutton");
+                
+                UIButton *ToolbarBtn = [self.ToolbarItems objectAtIndex:i];
+            
+                [ToolbarBtn setFrame: CGRectMake((int)x_coord, (int)TOP_MARGIN, (int)ButtonSize.width, (int)ButtonSize.height)];
+                
+                
+                UIImage *ToolbarBtnImg = ToolbarBtn.imageView.image;
+                
+                if (ToolbarBtnImg.size.width > ButtonSize.width)
+                {
+                    ToolbarBtnImg = [self imageWithImage:ToolbarBtnImg scaledToSize:CGSizeMake(ButtonSize.width, (ButtonSize.width*ToolbarBtnImg.size.height)/ToolbarBtnImg.size.width)];
+                    [ToolbarBtn setImage:ToolbarBtnImg forState:UIControlStateNormal];
+                }
+                x_coord += HOR_MARGIN + ButtonSize.width;
         }
-        x_coord += HOR_MARGIN + ButtonSize.width;
+        else if([item class] == [UILabel class])
+        {
+            UILabel *label = [self.ToolbarItems objectAtIndex:i];
+            [label setFrame: CGRectMake((int)x_coord, (int)TOP_MARGIN, (int)ButtonSize.width, (int)ButtonSize.height)];
+                
+//            UIImage *ToolbarBtnImg = ToolbarBtn.imageView.image;
+            
+            x_coord += HOR_MARGIN + ButtonSize.width;
+            
+        }
     }
     
     return x_coord;
@@ -91,7 +111,9 @@
     CGSize ButtonSize = CGSizeMake( (self.frame.size.width - HOR_MARGIN*([self.ToolbarItems count]+2))/([self.ToolbarItems count]+1), self.frame.size.height-TOP_MARGIN-BOTTOM_MARGIN);
     
     UIButton *NewToolbarBtn = [[UIButton alloc]initWithFrame:CGRectMake((int)x_coord, (int)TOP_MARGIN, (int)ButtonSize.width, (int)ButtonSize.height)];
+    
     NewToolbarBtn.showsTouchWhenHighlighted = YES;
+//    NewToolbarBtn.showsTouchWhenHighlighted = NO;
     NewToolbarBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     float img_width = image.size.width;
     float img_height = image.size.height;
@@ -117,6 +139,46 @@
 
     [NewToolbarBtn release];
 }
+
+
+- (void)AddToolbarItemLabelWithText:(NSString *)aText
+                              color:(UIColor *)aColor
+{
+    float x_coord = [self AdjustExistingButtonsToFitWithCount:[self.ToolbarItems count]+1];
+    CGSize labelSize = CGSizeMake( (self.frame.size.width - HOR_MARGIN*([self.ToolbarItems count]+2))/([self.ToolbarItems count]+1), self.frame.size.height-TOP_MARGIN-BOTTOM_MARGIN);
+
+    CGRect r =CGRectMake((int)x_coord, (int)TOP_MARGIN, (int)labelSize.width, (int)labelSize.height);
+    UILabel *label = [[UILabel alloc] initWithFrame:r];
+    
+    label.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    [label setBackgroundColor:[UIColor clearColor]];
+    [label setText:aText];
+    [label setTextAlignment:NSTextAlignmentCenter];
+//    [label setFont:[UIFont fontWith]]
+    [label setTextColor:aColor];
+    
+    [self.ToolbarItems addObject:label];
+    [self addSubview:label];
+    
+}
+
+-(void)AddFixedSpaceToolbarItem
+{
+    float x_coord = [self AdjustExistingButtonsToFitWithCount:[self.ToolbarItems count]+1];
+    CGSize labelSize = CGSizeMake( (self.frame.size.width - HOR_MARGIN*([self.ToolbarItems count]+2))/([self.ToolbarItems count]+1), self.frame.size.height-TOP_MARGIN-BOTTOM_MARGIN);
+
+    CGRect r =CGRectMake((int)x_coord, (int)TOP_MARGIN, (int)labelSize.width, (int)labelSize.height);
+    UILabel *label = [[UILabel alloc] initWithFrame:r];
+    
+    label.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    [label setBackgroundColor:[UIColor clearColor]];
+    
+    [self.ToolbarItems addObject:label];
+    [self addSubview:label];
+}
+
 
 /*
 // Only override drawRect: if you perform custom drawing.

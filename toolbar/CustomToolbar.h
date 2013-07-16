@@ -16,11 +16,16 @@
 
 @property (readonly) NSMutableArray *ToolbarItems;
 
-- (id)initWithFrame:(CGRect)frame AndBackgroundColor:(UIColor*)bgColor;
-- (void)AddToolbarItemWithImage: (UIImage*)image Target:(id)target Selector:(SEL)selector;
-- (void)ButtonAtIndex:(int)index SetEnabled:(BOOL)enabled;
-- (void)RemoveButtonAtIndex:(int)index;
+ - (id)initWithFrame:(CGRect)frame AndBackgroundColor:(UIColor*)bgColor;
+ - (void)AddToolbarItemWithImage: (UIImage*)image Target:(id)target Selector:(SEL)selector;
+ - (void)ButtonAtIndex:(int)index SetEnabled:(BOOL)enabled;
+ - (void)RemoveButtonAtIndex:(int)index;
 
-- (float)AdjustExistingButtonsToFitWithCount:(int)count;
+ - (float)AdjustExistingButtonsToFitWithCount:(int)count;
+
+ - (void) AddFixedSpaceToolbarItem;
+
+ - (void)AddToolbarItemLabelWithText:(NSString *)aText
+                              color:(UIColor *)aColor;
 
 @end
